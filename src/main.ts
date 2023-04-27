@@ -3,8 +3,9 @@ import fastifySwagger from '@fastify/swagger'
 import { withRefResolver } from 'fastify-zod'
 import swaggerUI from "@fastify/swagger-ui"
 
-   const app = Fastify()
-   const port = Number(process.env.PORT) || 3000
+   const app = Fastify({
+      logger: true
+   })
 
    //:::Register Swagger
    app.register( fastifySwagger, withRefResolver({
@@ -29,13 +30,19 @@ import swaggerUI from "@fastify/swagger-ui"
    })
    
    //↓ Register routes
-   app.get("/", () => ({message: 'Welcome to our api'}))
+   app.get("/", async(request, reply) => ({message: 'Welcome to our api'}))
 
-   app.listen({port:port}, () => {
+   async function start(){
       try {
-         console.log(`Server running at http://localhost:${port}`);
+         const port = Number(process.env.PORT) || 8080
+         await app.listen({port, host: '0.0.0.0'}, () => {
+            console.log(`Server running at http://localhost:${port}`);
+         })
       } catch (err) {
+         app.log.error(err)
          console.log( err );
          process.exit(1)
       }
-   })
+   }
+
+   start()
