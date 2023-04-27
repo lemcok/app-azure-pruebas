@@ -8,7 +8,7 @@ import swaggerUI from "@fastify/swagger-ui"
 export function buildApp(){
    const app = Fastify()
 
-   app.register(cors)
+   // app.register(cors)
 
    //:::Register Swagger
    app.register( fastifySwagger, withRefResolver({
